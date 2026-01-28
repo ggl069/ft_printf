@@ -10,30 +10,94 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
+#include "ft_printf.h"
 #include <stdarg.h>
 #include <stdio.h>
+
+void	print_s(int *count, char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		ft_putchar_fd(str[i], 1);
+		i++;
+		(*count)++;
+	}
+}
+
+void	print_int(int *count, int num)
+{
+	char	*str_num;
+	size_t	len;
+
+	str_num = ft_itoa(num);
+	if (!str_num)
+		return ;
+	len = ft_strlen(str_num);
+	write(1, str_num, len);
+	*count += len;
+	free(str_num);
+}
+
+int	print_right_type(char type, va_list list, int *count)
+{
+	if (type == '%')
+	{
+		va_arg(list, char);
+		ft_putchar_fd('%', 1);
+		(*count)++;
+	}
+	else if (type == 'c')
+	{
+		ft_putchar_fd(va_arg(list, char), 1);
+		(*count)++;
+	}
+	else if (type == 's')
+		print_s(count, va_arg(list, char *));
+	else if (type == 'd' || type == 'i')
+		print_int(count, va_arg(list, int));
+	else if (type == 'x')
+
+	else if (type == 'X')
+
+	else if (type == 'u')
+
+	else if (type == 'p')
+
+}
 
 int	ft_printf(const char *str, ...)
 {
 	va_list	vrs;
 	size_t	i;
+	int		cnt;
 
 	va_start(vrs, str);
-
+	cnt = 0;
+	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '%')
-			ft_putchar_fd(va_arg(vrs, int), 1);
+		if (str[i] == '%' && str[i + 1] != '%')
+		{
+			print_right_type(str[i + 1], vrs, &cnt);
+			i++;
+		}
+		else
+			ft_putchar_fd(str[i], 1);
+			cnt++;
 		i++;
 	}
+
+	va_end(vrs);
 
 	return 0;
 }
 
 int	main(void)
 {
-	ft_printf("ciao &", 5);
+	ft_printf("ciao % e ", 5);
 }
 
 
