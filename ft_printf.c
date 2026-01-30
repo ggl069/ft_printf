@@ -41,23 +41,47 @@ void	print_int(int *count, int num)
 	free(str_num);
 }
 
-int	print_right_type(char type, va_list list, int *count)
+void	print_hex(int *count, int num, int is_upper)
+{
+	size_t	i;
+	char	*hex_num;
+	char	*base;
+
+	i = 0;
+	hex_num = ...;
+	base = "0123456789abcdef";
+	if (num == 0)
+	{
+		write(1, '0', 1);
+		(*count)++;
+		return ;
+	}
+	while (num != 0)
+	{
+		hex_num[i] = base[num % 16];
+		num = num / 16;
+		i++;
+	}
+	ft_putchar_fd(hex_num, 1);
+}
+
+int	print_right_type(char type, va_list *list, int *count)
 {
 	if (type == '%')
 	{
-		va_arg(list, char);
+		va_arg(*list, int);
 		ft_putchar_fd('%', 1);
 		(*count)++;
 	}
 	else if (type == 'c')
 	{
-		ft_putchar_fd(va_arg(list, char), 1);
+		ft_putchar_fd(va_arg(*list, int), 1);
 		(*count)++;
 	}
 	else if (type == 's')
-		print_s(count, va_arg(list, char *));
+		print_s(count, va_arg(*list, char *));
 	else if (type == 'd' || type == 'i')
-		print_int(count, va_arg(list, int));
+		print_int(count, va_arg(*list, int));
 	else if (type == 'x')
 
 	else if (type == 'X')
