@@ -48,11 +48,13 @@ void	print_hex(int *count, int num, int is_upper)
 	char	*base;
 
 	i = 0;
-	hex_num = ...;
+	hex_num = malloc(sizeof(char) * 16);
+	if (!hex_num)
+		return ;
 	base = "0123456789abcdef";
 	if (num == 0)
 	{
-		write(1, '0', 1);
+		write(1, "0", 1);
 		(*count)++;
 		return ;
 	}
@@ -62,7 +64,8 @@ void	print_hex(int *count, int num, int is_upper)
 		num = num / 16;
 		i++;
 	}
-	ft_putchar_fd(hex_num, 1);
+	ft_strflip(hex_num);
+	ft_putstr_fd(hex_num, 1);
 }
 
 int	print_right_type(char type, va_list *list, int *count)
@@ -83,13 +86,14 @@ int	print_right_type(char type, va_list *list, int *count)
 	else if (type == 'd' || type == 'i')
 		print_int(count, va_arg(*list, int));
 	else if (type == 'x')
+		print_hex(count, va_arg(*list, int), 0);
+	//else if (type == 'X')
 
-	else if (type == 'X')
+	//else if (type == 'u')
 
-	else if (type == 'u')
+	//else if (type == 'p')
 
-	else if (type == 'p')
-
+	return (0);
 }
 
 int	ft_printf(const char *str, ...)
@@ -105,7 +109,7 @@ int	ft_printf(const char *str, ...)
 	{
 		if (str[i] == '%' && str[i + 1] != '%')
 		{
-			print_right_type(str[i + 1], vrs, &cnt);
+			print_right_type(str[i + 1], &vrs, &cnt);
 			i++;
 		}
 		else
@@ -116,12 +120,12 @@ int	ft_printf(const char *str, ...)
 
 	va_end(vrs);
 
-	return 0;
+	return (0);
 }
 
 int	main(void)
 {
-	ft_printf("ciao % e ", 5);
+	ft_printf("ciao %x \n", 5);
 }
 
 
