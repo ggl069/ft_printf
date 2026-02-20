@@ -14,7 +14,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-void	print_s(int *count, char *str)
+
+void	print_str(int *count, char *str)
 {
 	size_t	i;
 
@@ -51,11 +52,15 @@ void	print_hex(int *count, int num, int is_upper)
 	hex_num = malloc(sizeof(char) * 16);
 	if (!hex_num)
 		return ;
-	base = "0123456789abcdef";
+	if (is_upper)
+		base = "0123456789ABCDEF";
+	else
+		base = "0123456789abcdef";
 	if (num == 0)
 	{
 		write(1, "0", 1);
 		(*count)++;
+		free(hex_num);
 		return ;
 	}
 	while (num != 0)
@@ -64,15 +69,26 @@ void	print_hex(int *count, int num, int is_upper)
 		num = num / 16;
 		i++;
 	}
+	hex_num[i] = '\0';
 	ft_strflip(hex_num);
 	ft_putstr_fd(hex_num, 1);
+	(*count)++;
+	free(hex_num);
 }
 
+void	print_uns_int(int *count, unsigned int	num)
+{
+	char	*ns;
+	size_t	i;
+
+	i = 0;
+	while (num[i])
+	ft_putstr_fd(ns, 1);
+}
 int	print_right_type(char type, va_list *list, int *count)
 {
 	if (type == '%')
 	{
-		va_arg(*list, int);
 		ft_putchar_fd('%', 1);
 		(*count)++;
 	}
@@ -82,39 +98,41 @@ int	print_right_type(char type, va_list *list, int *count)
 		(*count)++;
 	}
 	else if (type == 's')
-		print_s(count, va_arg(*list, char *));
+		print_str(count, va_arg(*list, char *));
 	else if (type == 'd' || type == 'i')
 		print_int(count, va_arg(*list, int));
 	else if (type == 'x')
 		print_hex(count, va_arg(*list, int), 0);
-	//else if (type == 'X')
-
+	else if (type == 'X')
+		print_hex(count, va_arg(*list, int), 1);
 	//else if (type == 'u')
 
 	//else if (type == 'p')
 
-	return (0);
+	return (*count);
 }
 
 int	ft_printf(const char *str, ...)
 {
-	va_list	vrs;
 	size_t	i;
 	int		cnt;
+	va_list	vrs;
 
 	va_start(vrs, str);
 	cnt = 0;
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '%' && str[i + 1] != '%')
+		if (str[i] == '%')
 		{
 			print_right_type(str[i + 1], &vrs, &cnt);
 			i++;
 		}
 		else
+		{
 			ft_putchar_fd(str[i], 1);
 			cnt++;
+		}
 		i++;
 	}
 
@@ -125,7 +143,7 @@ int	ft_printf(const char *str, ...)
 
 int	main(void)
 {
-	ft_printf("ciao %x \n", 5);
+	ft_printf("final print: %X \n", 648332432);
 }
 
 
