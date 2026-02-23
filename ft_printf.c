@@ -76,15 +76,20 @@ void	print_hex(int *count, int num, int is_upper)
 	free(hex_num);
 }
 
-void	print_uns_int(int *count, unsigned int	num)
+void	print_uns_int(int *count, unsigned int num)
 {
 	char	*ns;
-	size_t	i;
+	size_t	len;
 
-	i = 0;
-	while (num[i])
+	ns = ft_uitoa(num);
+	if (!ns)
+		return ;
+	len = ft_strlen(ns);
 	ft_putstr_fd(ns, 1);
+	*count += len;
+	free(ns);
 }
+
 int	print_right_type(char type, va_list *list, int *count)
 {
 	if (type == '%')
